@@ -4,6 +4,7 @@ namespace ZarulIzham\DuitNowQR;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use ZarulIzham\DuitNowQR\Models\DuitNowQRTransaction;
 
 class DuitNowQR
 {
@@ -27,7 +28,7 @@ class DuitNowQR
         return $response->object()->access_token;
     }
 
-    public function generateQR($amount)
+    public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null)
     {
         $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
@@ -52,21 +53,13 @@ class DuitNowQR
             'TrxCurrency' => '458',
             'TrxAmount' => number_format($amount, 2),
             'AdditionalDataFieldTemplate' => "1",
-            'StoreLabel' => "MBSP Aspire",
-            'ReferenceLabel' => date('dmYHis'),
-            'ConsumerLabel' => 'UniqueUUID',
-            'TerminalLabel' => 'TerminalLabel',
+            'StoreLabel' => $storeLabel,
+            'ReferenceLabel' => $referenceLabel,
+            'ConsumerLabel' => $consumerLabel,
+            'TerminalLabel' => $terminalLabel,
         ];
 
-        $h = '';
-        foreach ($headers as $index => $header) {
-            $h .= $index . ':' . $header . "\n";
-        }
-
-        $b = '';
-        foreach ($body as $index => $bo) {
-            $b .= $index . ':' . $bo . "\n";
-        }
+        $this->saveTransaction($body, $referenceId);
 
         $response = Http::withHeaders($headers)->withOptions([
             'debug' => false,
@@ -82,5 +75,15 @@ class DuitNowQR
         $sequence = str_pad(Cache::increment('duitnow_qr_sequence'), 6, "0", STR_PAD_LEFT);
 
         return config('duitnowqr.prefix_id') . date('dmY') . $sequence;
+    }
+
+    public function saveTransaction($body, $referenceId = null)
+    {
+        return DuitNowQRTransaction::create([
+            'request_payload' => $body,
+            'amount' => $body['TrxAmount'],
+            'reference_id' => $referenceId,
+            'transaction_status' => 'Created',
+        ]);
     }
 }

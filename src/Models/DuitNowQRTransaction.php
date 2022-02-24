@@ -12,11 +12,13 @@ class DuitNowQRTransaction extends Model
         'reference_id',
         'source_reference_number',
         'transaction_status',
+        'amount',
         'request_payload',
         'response_payload',
     ];
 
     protected $casts = [
+        'amount' => 'double',
         'request_payload' => 'object',
         'response_payload' => 'object',
     ];
