@@ -74,7 +74,7 @@ class DuitNowQR
             ->withBody(json_encode($body), 'application/json')
             ->post($url);
 
-        return $response->body();
+        return $response->json();
     }
 
     protected function getSrcRefNo()
