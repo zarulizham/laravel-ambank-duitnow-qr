@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace ZarulIzham\DuitNowQR\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class DuitNowQRCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-duitnow-qr';
 
     public $description = 'My command';
 
