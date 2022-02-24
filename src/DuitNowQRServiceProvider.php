@@ -4,7 +4,6 @@ namespace ZarulIzham\DuitNowQR;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use ZarulIzham\DuitNowQR\Commands\DuitNowQRCommand;
 
 class DuitNowQRServiceProvider extends PackageServiceProvider
 {
