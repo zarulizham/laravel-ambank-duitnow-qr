@@ -26,11 +26,14 @@ You can publish the config file with:
 php artisan vendor:publish --tag="laravel-duitnow-qr-config"
 ```
 
-This is the contents of the published config file:
+This is the contents of the `.env` file:
 
-```php
-return [
-];
+```env
+DUITNOW_QR_CLIENT_ID=
+DUITNOW_QR_CLIENT_SECRET=
+DUITNOW_QR_CHANNEL_TOKEN=
+DUITNOW_QR_PREFIX_ID=
+DUITNOW_QR_QR_ID=
 ```
 
 Optionally, you can publish the views using
