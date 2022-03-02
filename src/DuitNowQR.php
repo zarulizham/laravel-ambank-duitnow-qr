@@ -66,7 +66,7 @@ class DuitNowQR
             ->withBody(json_encode($body), 'application/json')
             ->post($url);
 
-        $this->saveTransaction($body, $response['QRString'], $sourceReferenceNumber, $referenceId);
+        $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId);
 
         return $response->json();
     }
@@ -81,13 +81,14 @@ class DuitNowQR
         return config('duitnowqr.prefix_id') . date('dmY') . $sequence;
     }
 
-    public function saveTransaction($body, $qrString, $sourceReferenceNumber, $referenceId = null)
+    public function saveTransaction($body, $qrString, $qrCode, $sourceReferenceNumber, $referenceId = null)
     {
         return DuitNowQRTransaction::create([
             'request_payload' => $body,
             'amount' => $body['TrxAmount'],
             'reference_id' => $referenceId,
             'qr_string' => $qrString,
+            'qr_code' => $qrCode,
             'source_reference_number' => $sourceReferenceNumber,
             'transaction_status' => 'Created',
         ]);

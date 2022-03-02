@@ -16,6 +16,7 @@ class DuitNowQRTransaction extends Model
         'request_payload',
         'response_payload',
         'qr_string',
+        'qr_code',
     ];
 
     protected $casts = [
