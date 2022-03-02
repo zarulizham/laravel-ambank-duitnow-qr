@@ -92,7 +92,7 @@ class DuitNowQR
         ]);
     }
 
-    public function getStatus($srcRefNo, $qrString, $transactionDate)
+    public function getStatus($qrString, $transactionDate)
     {
         $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
@@ -123,16 +123,8 @@ class DuitNowQR
 
         $bodyEscaped = str_replace('\\', '', json_encode($body));
 
-        // dd($body);
-
         $headers['Ambank-Signature'] = $this->signature('/api/MerchantQR/v1.0/GetQTNotification/' . $sourceReferenceNumber, $ambankTimestamp, $body);
 
-        \Log::debug([
-            'headers' => $headers,
-            'stringToHash' => $this->stringToHash,
-            'stringToHashBase64' => $this->stringToHashBase64,
-            'body' => $body,
-        ]);
         $response = Http::withHeaders($headers)->withOptions([
             'debug' => true,
         ])
@@ -154,11 +146,8 @@ class DuitNowQR
         $headerString = preg_replace('/\s+/', '', json_encode($header, JSON_UNESCAPED_SLASHES));
         $bodyString = preg_replace('/\s+/', '', json_encode($body, JSON_UNESCAPED_SLASHES));
 
-        $stringToHash = $headerString . '.' . $bodyString;
         $stringToHashBase64 = base64_encode($headerString) . '.' . base64_encode($bodyString);
         $stringToHashBase64 = str_replace('=', '', $stringToHashBase64);
-        $this->stringToHash = $stringToHash;
-        $this->stringToHashBase64 = $stringToHashBase64;
 
         $hash_hmac = hash_hmac('sha256', $stringToHashBase64, config('duitnowqr.api_secret'));
         $signatureHex = hex2bin($hash_hmac);
