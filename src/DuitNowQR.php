@@ -75,8 +75,9 @@ class DuitNowQR
     {
         $sequence = str_pad(Cache::increment('duitnow_qr_sequence'), 6, "0", STR_PAD_LEFT);
         \Log::debug([
-            'sequence' => $sequence
+            'sequence' => $sequence,
         ]);
+
         return config('duitnowqr.prefix_id') . date('dmY') . $sequence;
     }
 
@@ -163,6 +164,7 @@ class DuitNowQR
         $hash_hmac = hash_hmac('sha256', $stringToHashBase64, config('duitnowqr.api_secret'));
         $signatureHex = hex2bin($hash_hmac);
         $base64 = str_replace('=', '', base64_encode($signatureHex));
+
         return $base64;
     }
 }
