@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('source_reference_number', 100)->nullable();
             $table->string('transaction_status', 50)->nullable();
             $table->double('amount', 15, 2)->nullable()->default(0);
+            $table->string('qr_string', 1000)->nullable();
             $table->json('request_payload')->nullable();
             $table->json('response_payload')->nullable();
             $table->timestamps();
