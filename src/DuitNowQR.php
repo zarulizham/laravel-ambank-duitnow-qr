@@ -128,7 +128,7 @@ class DuitNowQR
         $headers['Ambank-Signature'] = $this->signature('/api/MerchantQR/v1.0/GetQTNotification/' . $sourceReferenceNumber, $ambankTimestamp, $body);
 
         $response = Http::withHeaders($headers)->withOptions([
-            'debug' => true,
+            'debug' => false,
         ])
             ->withBody($bodyEscaped, 'application/json')
             ->post($url);
