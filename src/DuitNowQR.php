@@ -52,7 +52,7 @@ class DuitNowQR
             'QRId' => config('duitnowqr.qr_id'),
             'PointInitiation' => '12',
             'TrxCurrency' => '458',
-            'TrxAmount' => number_format($amount, 2),
+            'TrxAmount' => number_format($amount, 2, ".", ""),
             'AdditionalDataFieldTemplate' => "1",
             'StoreLabel' => $storeLabel,
             'ReferenceLabel' => $referenceLabel,
