@@ -28,7 +28,7 @@ class DuitNowQR
         return $response->object()->access_token;
     }
 
-    public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null)
+    public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null, $expiryMinutes = 60)
     {
         $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
@@ -63,6 +63,7 @@ class DuitNowQR
             'ReferenceLabel' => $referenceLabel,
             'ConsumerLabel' => $consumerLabel,
             'TerminalLabel' => $terminalLabel,
+            'ExpiryMinutes' => $expiryMinutes,
         ];
 
         $response = Http::withHeaders($headers)->withOptions([
