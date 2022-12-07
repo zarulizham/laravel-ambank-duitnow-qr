@@ -32,9 +32,14 @@ class DuitNowQR
     {
         $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
-        $url = config('duitnowqr.url') . '/api/DuitNowQR/v1.0/GenQR';
-
         $sourceReferenceNumber = $this->getSrcRefNo();
+
+        if (config('duitnowqr.version') == 2) {
+            $url = config('duitnowqr.url') . '/api/DuitNowQR/v2.0/GenQR/' . $sourceReferenceNumber;
+        } else {
+            $url = config('duitnowqr.url') . '/api/DuitNowQR/v1.0/GenQR';
+        }
+
         $headers = [
             'Authorization' => 'Bearer ' . $token,
             'Authentication' => $token,

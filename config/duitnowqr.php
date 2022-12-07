@@ -11,4 +11,5 @@ return [
     'qr_id' => env('DUITNOW_QR_QR_ID'),
     'api_key' => env('DUITNOW_QR_API_KEY'),
     'api_secret' => env('DUITNOW_QR_API_SECRET'),
+    'version' => env('DUITNOW_QR_VERSION', 1),
 ];
