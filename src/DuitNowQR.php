@@ -125,8 +125,8 @@ class DuitNowQR
         $body = [
             'QRString' => $qrString,
             'TrxDate' => $transactionDate->format('d/m/Y'),
-            'TrxTimeStart' => $transactionDate->format('H:i'),
-            'TrxTimeEnd' => now()->format('H:i'),
+            'TrxTimeStart' => $transactionDate->clone()->setTime(0, 1, 0)->format('H:i'),
+            'TrxTimeEnd' => $transactionDate->clone()->setTime(23, 59, 59)->format('H:i'),
         ];
 
         $bodyEscaped = str_replace('\\', '', json_encode($body));
