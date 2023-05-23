@@ -8,24 +8,22 @@
     ],
     "homepage": "https://github.com/zarulizham/laravel-duitnow-qr",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Zarul Zubir",
-            "email": "zarul.izham@gmail.com",
-            "role": "Developer"
-        }
-    ],
+    "authors": [{
+        "name": "Zarul Zubir",
+        "email": "zarul.izham@gmail.com",
+        "role": "Developer"
+    }],
     "require": {
         "php": "^8.0",
         "spatie/laravel-package-tools": "^1.9.2",
-        "illuminate/contracts": "^9.0"
+        "illuminate/contracts": "^9.0|^10"
     },
     "require-dev": {
-        "nunomaduro/collision": "^6.0",
-        "orchestra/testbench": "^7.0",
-        "pestphp/pest": "^1.21",
-        "pestphp/pest-plugin-laravel": "^1.1",
-        "phpunit/phpunit": "^9.5",
+        "nunomaduro/collision": "^7.0",
+        "orchestra/testbench": "^8.5",
+        "pestphp/pest": "^2.6",
+        "pestphp/pest-plugin-laravel": "^2.0",
+        "phpunit/phpunit": "^10.1",
         "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
@@ -45,7 +43,10 @@
         "test-coverage": "vendor/bin/pest --coverage"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": false
+        }
     },
     "extra": {
         "laravel": {
