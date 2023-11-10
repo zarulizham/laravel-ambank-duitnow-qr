@@ -80,9 +80,6 @@ class DuitNowQR
     protected function getSrcRefNo()
     {
         $sequence = str_pad(Cache::increment('duitnow_qr_sequence'), 6, "0", STR_PAD_LEFT);
-        \Log::debug([
-            'sequence' => $sequence,
-        ]);
 
         return config('duitnowqr.prefix_id') . date('dmY') . $sequence;
     }
