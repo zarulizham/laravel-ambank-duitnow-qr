@@ -115,7 +115,6 @@ class DuitNowQR
             'srcRefNo' => $sourceReferenceNumber,
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'Channel-Token' => config('duitnowqr.channel_token'),
             'Channel-APIKey' => config('duitnowqr.api_key'),
         ];
 
