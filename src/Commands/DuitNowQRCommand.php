@@ -2,7 +2,11 @@
 
 namespace ZarulIzham\DuitNowQR\Commands;
 
+use Illuminate\Console\Command;
 use ZarulIzham\DuitNowQR\Services\TestScript\Case2_1;
+use ZarulIzham\DuitNowQR\Services\TestScript\Case2_10;
+use ZarulIzham\DuitNowQR\Services\TestScript\Case2_11;
+use ZarulIzham\DuitNowQR\Services\TestScript\Case2_12;
 use ZarulIzham\DuitNowQR\Services\TestScript\Case2_2;
 use ZarulIzham\DuitNowQR\Services\TestScript\Case2_3;
 use ZarulIzham\DuitNowQR\Services\TestScript\Case2_4;
@@ -11,10 +15,6 @@ use ZarulIzham\DuitNowQR\Services\TestScript\Case2_6;
 use ZarulIzham\DuitNowQR\Services\TestScript\Case2_7;
 use ZarulIzham\DuitNowQR\Services\TestScript\Case2_8;
 use ZarulIzham\DuitNowQR\Services\TestScript\Case2_9;
-use ZarulIzham\DuitNowQR\Services\TestScript\Case2_10;
-use ZarulIzham\DuitNowQR\Services\TestScript\Case2_11;
-use ZarulIzham\DuitNowQR\Services\TestScript\Case2_12;
-use Illuminate\Console\Command;
 
 class DuitNowQRCommand extends Command
 {

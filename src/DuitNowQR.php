@@ -2,8 +2,9 @@
 
 namespace ZarulIzham\DuitNowQR;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
+use ZarulIzham\DuitNowQR\Exceptions\BadRequest;
 use ZarulIzham\DuitNowQR\Models\DuitNowQRTransaction;
 
 class DuitNowQR
@@ -71,6 +72,10 @@ class DuitNowQR
         ])
             ->withBody(json_encode($body), 'application/json')
             ->post($url);
+
+        if ($response->status() == 400) {
+            throw new BadRequest($response['ResponseMessage']);
+        }
 
         $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId);
 
