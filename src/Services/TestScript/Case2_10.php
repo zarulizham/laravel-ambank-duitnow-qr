@@ -9,10 +9,10 @@ class Case2_10 {
         $response = DuitNowQR::generateQR(
             amount: 11,
             storeLabel: "Store Label",
-            referenceLabel: "Case 2.10",
-            consumerLabel:"Consumer Label",
+            referenceLabel: "Case210",
+            consumerLabel:"ConsumerLabel",
             terminalLabel: null,
-            referenceId: "case2.10_".date('Ymd_His'),
+            referenceId: "case 2.10 ".date('Ymd.His'),
             expiryMinutes: 87600,
         );
 
@@ -20,7 +20,7 @@ class Case2_10 {
         $raw_image_string = str_replace('data:image/png;base64,', '', $raw_image_string);
         $raw_image_string = str_replace(' ', '+', $raw_image_string);
         $imageName = 'case2.10.png';
-        \File::put(storage_path(). '/app/dnqr/test-script/' . $imageName, $raw_image_string);
+        \File::put(public_path(). '/app/dnqr/test-script/' . $imageName, $raw_image_string);
     }
 
 }
