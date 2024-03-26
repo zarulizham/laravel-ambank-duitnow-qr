@@ -16,6 +16,7 @@ return new class extends Migration
                 )->onUpdate('set null')->onDelete('set null');
             $table->string('end_id', 50)->nullable();
             $table->string('biz_id', 50)->nullable();
+            $table->string('qr_string', 1000)->nullable();
             $table->string('transaction_status', 10)->nullable();
             $table->string('reason', 300)->nullable();
             $table->string('sender_name', 150)->nullable();
