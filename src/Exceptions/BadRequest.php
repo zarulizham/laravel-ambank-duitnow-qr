@@ -10,11 +10,13 @@ class BadRequest extends Exception
 
     public $message;
 
-    public function __construct($message = "", $code = 0) {
+    public function __construct($message = '', $code = 0)
+    {
         $this->code = $code;
         $this->message = $message;
     }
-     /**
+
+    /**
      * Report the exception.
      *
      * @return bool|null

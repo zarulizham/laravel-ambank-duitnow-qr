@@ -19,6 +19,6 @@ class DuitNowQRServiceProvider extends PackageServiceProvider
             ->hasCommand('ZarulIzham\DuitNowQR\Commands\DuitNowQRCommand')
             ->name('laravel-duitnow-qr')
             ->hasConfigFile('duitnowqr')
-            ->hasMigration('create_duitnow_qr_transactions');
+            ->hasMigrations('create_duitnow_qr_transactions', 'create_duitnow_qr_payments');
     }
 }

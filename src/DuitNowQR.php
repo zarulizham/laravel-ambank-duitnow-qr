@@ -2,8 +2,8 @@
 
 namespace ZarulIzham\DuitNowQR;
 
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use ZarulIzham\DuitNowQR\Exceptions\BadRequest;
 use ZarulIzham\DuitNowQR\Models\DuitNowQRTransaction;
 
@@ -11,7 +11,7 @@ class DuitNowQR
 {
     public function authenticate()
     {
-        $url = config('duitnowqr.url') . '/api/oauth/v2.0/token';
+        $url = config('duitnowqr.url').'/api/oauth/v2.0/token';
 
         $response = Http::asForm()
             ->withBasicAuth(config('duitnowqr.client_id'), config('duitnowqr.client_secret'))
@@ -29,20 +29,20 @@ class DuitNowQR
         return $response->object()->access_token;
     }
 
-    public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null, $expiryMinutes = 60)
+    public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null, $expiryMinutes = 60, $referenceType = null)
     {
         $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
         $sourceReferenceNumber = $this->getSrcRefNo();
 
         if (config('duitnowqr.version') == 2) {
-            $url = config('duitnowqr.url') . '/api/DuitNowQR/v2.0/GenQR/' . $sourceReferenceNumber;
+            $url = config('duitnowqr.url').'/api/DuitNowQR/v2.0/GenQR/'.$sourceReferenceNumber;
         } else {
-            $url = config('duitnowqr.url') . '/api/DuitNowQR/v1.0/GenQR';
+            $url = config('duitnowqr.url').'/api/DuitNowQR/v1.0/GenQR';
         }
 
         $headers = [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'Authentication' => $token,
             'AmBank-Timestamp' => now()->format('dmYHis'),
             'Channel-Token' => config('duitnowqr.channel_token'),
@@ -58,8 +58,8 @@ class DuitNowQR
             'QRId' => config('duitnowqr.qr_id'),
             'PointInitiation' => '12',
             'TrxCurrency' => '458',
-            'TrxAmount' => number_format($amount, 2, ".", ""),
-            'AdditionalDataFieldTemplate' => "1",
+            'TrxAmount' => number_format($amount, 2, '.', ''),
+            'AdditionalDataFieldTemplate' => '1',
             'StoreLabel' => $storeLabel,
             'ReferenceLabel' => $referenceLabel,
             'ConsumerLabel' => $consumerLabel,
@@ -77,24 +77,25 @@ class DuitNowQR
             throw new BadRequest($response['ResponseMessage']);
         }
 
-        $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId);
+        $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId, $referenceType);
 
         return $response->json();
     }
 
     protected function getSrcRefNo()
     {
-        $sequence = str_pad(Cache::increment('duitnow_qr_sequence'), 6, "0", STR_PAD_LEFT);
+        $sequence = str_pad(Cache::increment('duitnow_qr_sequence'), 6, '0', STR_PAD_LEFT);
 
-        return config('duitnowqr.prefix_id') . date('dmY') . $sequence;
+        return config('duitnowqr.prefix_id').date('dmY').$sequence;
     }
 
-    public function saveTransaction($body, $qrString, $qrCode, $sourceReferenceNumber, $referenceId = null)
+    public function saveTransaction($body, $qrString, $qrCode, $sourceReferenceNumber, $referenceId = null, $referenceType = null)
     {
         return DuitNowQRTransaction::create([
             'request_payload' => $body,
             'amount' => $body['TrxAmount'],
             'reference_id' => $referenceId,
+            'reference_type' => $referenceType,
             'qr_string' => $qrString,
             'qr_code' => $qrCode,
             'source_reference_number' => $sourceReferenceNumber,
@@ -107,13 +108,12 @@ class DuitNowQR
         $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
         $sourceReferenceNumber = $this->getSrcRefNo();
-        $url = config('duitnowqr.url') . "/api/MerchantQR/v1.0/GetQTNotification/$sourceReferenceNumber";
+        $url = config('duitnowqr.url')."/api/MerchantQR/v1.0/GetQTNotification/$sourceReferenceNumber";
 
         $ambankTimestamp = now()->format('dmYHis');
 
-
         $headers = [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'Authentication' => $token,
             'AmBank-Timestamp' => $ambankTimestamp,
             'Channel-Token' => config('duitnowqr.channel_token'),
@@ -132,7 +132,7 @@ class DuitNowQR
 
         $bodyEscaped = str_replace('\\', '', json_encode($body));
 
-        $headers['Ambank-Signature'] = $this->signature('/api/MerchantQR/v1.0/GetQTNotification/' . $sourceReferenceNumber, $ambankTimestamp, $body);
+        $headers['Ambank-Signature'] = $this->signature('/api/MerchantQR/v1.0/GetQTNotification/'.$sourceReferenceNumber, $ambankTimestamp, $body);
 
         $response = Http::withHeaders($headers)->withOptions([
             'debug' => false,
@@ -155,7 +155,7 @@ class DuitNowQR
         $headerString = preg_replace('/\s+/', '', json_encode($header, JSON_UNESCAPED_SLASHES));
         $bodyString = preg_replace('/\s+/', '', json_encode($body, JSON_UNESCAPED_SLASHES));
 
-        $stringToHashBase64 = base64_encode($headerString) . '.' . base64_encode($bodyString);
+        $stringToHashBase64 = base64_encode($headerString).'.'.base64_encode($bodyString);
         $stringToHashBase64 = str_replace('=', '', $stringToHashBase64);
 
         $hash_hmac = hash_hmac('sha256', $stringToHashBase64, config('duitnowqr.api_secret'));
