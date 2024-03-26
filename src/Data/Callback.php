@@ -3,6 +3,7 @@
 namespace ZarulIzham\DuitNowQR\Data;
 
 use Carbon\Carbon;
+use DateTime;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 use ZarulIzham\DuitNowQR\Models\DuitNowQRTransaction;
@@ -48,6 +49,8 @@ class Callback extends Data
 
         #[MapInputName('SourceofFund')]
         public string $source_of_fund,
+
+        public ?DateTime $paid_at,
     ) {
         $this->paid_at = Carbon::createFromFormat('d/m/Y H:i:s', $payment_date.' '.$payment_time);
         $this->duitnow_qr_transaction = DuitNowQRTransaction::query()
@@ -61,5 +64,13 @@ class Callback extends Data
     private function storePayment()
     {
         $this->duitnow_qr_transaction?->payments()->create($this->toArray());
+    }
+
+    public function excludeProperties()
+    {
+        return [
+            'payment_date',
+            'payment_time',
+        ];
     }
 }
