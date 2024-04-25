@@ -3,7 +3,6 @@
 namespace ZarulIzham\DuitNowQR\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use ZarulIzham\DuitNowQR\Models\QRInfo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class QRPayment extends Model

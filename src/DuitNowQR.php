@@ -31,7 +31,7 @@ class DuitNowQR
 
     public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null, $expiryMinutes = 60)
     {
-        $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn() => $this->authenticate());
+        $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
         $sourceReferenceNumber = $this->getSrcRefNo();
 
@@ -100,7 +100,7 @@ class DuitNowQR
 
     public function getStatus($qrString, $transactionDate)
     {
-        $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn() => $this->authenticate());
+        $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
         $sourceReferenceNumber = $this->getSrcRefNo();
         $url = config('duitnowqr.url') . "/api/MerchantQR/v1.0/GetQTNotification/$sourceReferenceNumber";

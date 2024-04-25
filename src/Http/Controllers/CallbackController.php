@@ -8,7 +8,6 @@ use ZarulIzham\DuitNowQR\Models\QRInfo;
 
 class CallbackController extends Controller
 {
-
     public function __invoke(Request $request)
     {
         $qrInfo = QRInfo::where('qr_string', $request->QRString)->first();
@@ -23,7 +22,7 @@ class CallbackController extends Controller
                     if ((float) $request->TrxAmount == $qrInfo->amount) {
                         $bill = Bill::where('hash_id', $qrInfo->reference_id)->first();
 
-                        if (!$bill->paid_at) {
+                        if (! $bill->paid_at) {
                             $bill->update([
                                 'paid_at' => now(),
                                 'paid_amount' => $request->TrxAmount,
