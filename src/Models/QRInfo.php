@@ -4,9 +4,9 @@ namespace ZarulIzham\DuitNowQR\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class DuitNowQRTransaction extends Model
+class QRInfo extends Model
 {
-    protected $table = 'duitnow_qr_transactions';
+    protected $table = 'duitnow_qr_info';
 
     protected $fillable = [
         'reference_id',

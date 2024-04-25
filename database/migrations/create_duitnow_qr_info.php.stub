@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('duitnow_qr_transactions', function (Blueprint $table) {
+        Schema::create('duitnow_qr_info', function (Blueprint $table) {
             $table->id();
             $table->string('reference_id', 100)->nullable();
             $table->string('source_reference_number', 100)->nullable();
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('duitnow_qr_transactions');
+        Schema::dropIfExists('duitnow_qr_info');
     }
 };
