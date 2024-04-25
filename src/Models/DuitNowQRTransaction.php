@@ -3,6 +3,7 @@
 namespace ZarulIzham\DuitNowQR\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class DuitNowQRTransaction extends Model
 {
@@ -10,6 +11,7 @@ class DuitNowQRTransaction extends Model
 
     protected $fillable = [
         'reference_id',
+        'reference_type',
         'source_reference_number',
         'transaction_status',
         'amount',
@@ -24,4 +26,12 @@ class DuitNowQRTransaction extends Model
         'request_payload' => 'object',
         'response_payload' => 'object',
     ];
+
+    /**
+     * Get all of the payments for the DuitNowQRTransaction
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(DuitNowQRPayment::class, 'transaction_id');
+    }
 }

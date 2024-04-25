@@ -11,6 +11,7 @@ return new class extends Migration
         Schema::create('duitnow_qr_transactions', function (Blueprint $table) {
             $table->id();
             $table->string('reference_id', 100)->nullable();
+            $table->string('reference_type', 100)->nullable();
             $table->string('source_reference_number', 100)->nullable();
             $table->string('transaction_status', 50)->nullable();
             $table->double('amount', 15, 2)->nullable()->default(0);

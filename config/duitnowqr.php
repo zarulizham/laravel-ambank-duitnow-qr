@@ -1,4 +1,5 @@
 <?php
+
 // config for ZarulIzham/DuitNowQR
 return [
     'url' => env('DUITNOW_QR_URL', 'https://amgatewayuat.ambg.com.my'),
