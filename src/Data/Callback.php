@@ -66,7 +66,7 @@ class Callback extends Data
         $this->duitnow_qr_transaction?->payments()->create($this->toArray());
     }
 
-    public function excludeProperties()
+    public function excludeProperties() : array
     {
         return [
             'payment_date',
