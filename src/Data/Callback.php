@@ -10,8 +10,6 @@ use ZarulIzham\DuitNowQR\Models\DuitNowQRTransaction;
 
 class Callback extends Data
 {
-    public $duitnow_qr_transaction;
-
     public function __construct(
 
         #[MapInputName('EndID')]
@@ -51,6 +49,8 @@ class Callback extends Data
         public string $source_of_fund,
 
         public ?DateTime $paid_at,
+
+        public ?DuitNowQRTransaction $duitnow_qr_transaction,
     ) {
         $this->paid_at = Carbon::createFromFormat('d/m/Y H:i:s', $payment_date.' '.$payment_time);
         $this->duitnow_qr_transaction = DuitNowQRTransaction::query()
