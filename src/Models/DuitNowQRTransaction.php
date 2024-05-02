@@ -4,6 +4,7 @@ namespace ZarulIzham\DuitNowQR\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class DuitNowQRTransaction extends Model
 {
@@ -33,5 +34,10 @@ class DuitNowQRTransaction extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(DuitNowQRPayment::class, 'transaction_id');
+    }
+
+    public function reference(): MorphTo
+    {
+        return $this->morphTo();
     }
 }
