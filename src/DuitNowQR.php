@@ -29,7 +29,7 @@ class DuitNowQR
         return $response->object()->access_token;
     }
 
-    public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null, $expiryMinutes = 60, $referenceType = null)
+    public function generateQR($amount, $storeLabel, $referenceLabel, $consumerLabel, $terminalLabel, $referenceId = null, $expiryMinutes = 60, $referenceType = null, $pointInitiation = '12')
     {
         $token = Cache::remember('duitnow_qr_token', config('duitnowqr.token_expiry'), fn () => $this->authenticate());
 
@@ -56,9 +56,8 @@ class DuitNowQR
 
         $body = [
             'QRId' => config('duitnowqr.qr_id'),
-            'PointInitiation' => '12',
+            'PointInitiation' => $pointInitiation,
             'TrxCurrency' => '458',
-            'TrxAmount' => number_format($amount, 2, '.', ''),
             'AdditionalDataFieldTemplate' => '1',
             'StoreLabel' => $storeLabel,
             'ReferenceLabel' => $referenceLabel,
@@ -66,6 +65,10 @@ class DuitNowQR
             'TerminalLabel' => $terminalLabel,
             'ExpiryMinutes' => $expiryMinutes,
         ];
+
+        if ($amount) {
+            $body['TrxAmount'] = number_format($amount, 2, '.', '');
+        }
 
         $response = Http::withHeaders($headers)->withOptions([
             'debug' => false,
