@@ -96,7 +96,7 @@ class DuitNowQR
     {
         return DuitNowQRTransaction::create([
             'request_payload' => $body,
-            'amount' => $body['TrxAmount'],
+            'amount' => $body['TrxAmount'] ?? null,
             'reference_id' => $referenceId,
             'reference_type' => $referenceType,
             'qr_string' => $qrString,
