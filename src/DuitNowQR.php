@@ -82,9 +82,7 @@ class DuitNowQR
             throw new BadRequest($response['ResponseMessage']);
         }
 
-        $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId, $referenceType);
-
-        return $response->json();
+        return $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId, $referenceType);
     }
 
     protected function getSrcRefNo()
