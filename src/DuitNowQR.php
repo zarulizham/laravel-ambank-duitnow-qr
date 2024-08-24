@@ -82,7 +82,9 @@ class DuitNowQR
             throw new BadRequest($response['ResponseMessage']);
         }
 
-        return $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId, $referenceType);
+        $this->saveTransaction($body, $response['QRString'], $response['QRCode'], $sourceReferenceNumber, $referenceId, $referenceType);
+
+        return $response->json();
     }
 
     protected function getSrcRefNo()
@@ -192,12 +194,9 @@ class DuitNowQR
                 ->withBody($bodyEscaped, 'application/json')
                 ->post($url);
         } catch (\Throwable $th) {
-            //throw $th;
         }
 
-        $this->storeRequeryStatus($duitNowQRTransaction, $sourceReferenceNumber, $transactionTimeStart, $transactionTimeEnd, $response);
-
-        return $response->json();
+        return $this->storeRequeryStatus($duitNowQRTransaction, $sourceReferenceNumber, $transactionTimeStart, $transactionTimeEnd, $response);
     }
 
     public function signature($uri, $ambankTimestamp, $body): string
