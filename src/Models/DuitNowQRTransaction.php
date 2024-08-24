@@ -40,4 +40,12 @@ class DuitNowQRTransaction extends Model
     {
         return $this->morphTo();
     }
+
+    /**
+     * Get all of the requeries for the DuitNowQRTransaction
+     */
+    public function requeries(): HasMany
+    {
+        return $this->hasMany(DuitNowQRRequery::class, 'transaction_id');
+    }
 }

@@ -1,0 +1,36 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('duitnow_qr_requeries', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('transaction_id')->nullable()
+                ->constrained(
+                    table: 'duitnow_qr_transactions'
+                )->onUpdate('set null')->onDelete('set null');
+            $table->string('source_reference_number', 100)->nullable();
+            $table->date('transaction_date')->nullable();
+            $table->time('transaction_time_start')->nullable()->default(0);
+            $table->time('transaction_time_end')->nullable()->default(0);
+            $table->json('response_payload')->nullable();
+            $table->string('status_code', 5)->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('duitnow_qr_requeries');
+    }
+};
