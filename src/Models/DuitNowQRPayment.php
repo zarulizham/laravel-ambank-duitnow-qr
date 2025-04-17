@@ -3,6 +3,7 @@
 namespace ZarulIzham\DuitNowQR\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DuitNowQRPayment extends Model
 {
@@ -31,4 +32,12 @@ class DuitNowQRPayment extends Model
     protected $casts = [
         'paid_at' => 'datetime',
     ];
+
+    /**
+     * Get the DuitNowQRTransaction that owns the DuitNowQRPayment
+     */
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(DuitNowQRTransaction::class);
+    }
 }
