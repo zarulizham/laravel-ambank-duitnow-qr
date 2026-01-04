@@ -54,6 +54,16 @@ class Callback extends Data
     ) {
         $this->paid_at = Carbon::createFromFormat('d/m/Y H:i:s', $payment_date.' '.$payment_time);
         $this->duitnow_qr_transaction = DuitNowQRTransaction::query()
+            ->select(
+                'id',
+                'reference_id',
+                'reference_type',
+                'source_reference_number',
+                'transaction_status',
+                'amount',
+                'qr_string',
+                'created_at',
+            )
             ->where('qr_string', $qr_string)
             ->latest()
             ->first();
