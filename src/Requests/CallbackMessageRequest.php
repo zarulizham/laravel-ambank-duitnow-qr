@@ -17,7 +17,7 @@ class CallbackMessageRequest extends FormRequest
         return true;
     }
 
-    public function data()
+    public function data($key = null, $default = null)
     {
         return Callback::from($this->all());
     }
