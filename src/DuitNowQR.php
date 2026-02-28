@@ -103,7 +103,7 @@ class DuitNowQR
             'reference_id' => $referenceId,
             'reference_type' => $referenceType,
             'qr_string' => $qrString,
-            'qr_code' => $qrCode,
+            'qr_code' => config('duitnowqr.store_qr_code') ? $qrCode : null,
             'source_reference_number' => $sourceReferenceNumber,
             'transaction_status' => 'Created',
         ]);

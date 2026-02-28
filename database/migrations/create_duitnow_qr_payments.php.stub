@@ -14,13 +14,13 @@ return new class extends Migration
                 ->constrained(
                     table: 'duitnow_qr_transactions'
                 )->onUpdate('set null')->onDelete('set null');
-            $table->string('end_id', 50)->nullable();
+            $table->string('end_id', 50)->nullable()->unique();
             $table->string('biz_id', 50)->nullable();
             $table->string('qr_string', 1000)->nullable();
             $table->string('transaction_status', 10)->nullable();
             $table->string('reason', 300)->nullable();
             $table->string('sender_name', 150)->nullable();
-            $table->double('amount', 10,2)->nullable();
+            $table->double('amount', 10, 2)->nullable();
             $table->string('currency', 5)->nullable();
             $table->string('account_number', 20)->nullable();
             $table->datetime('paid_at')->nullable();
