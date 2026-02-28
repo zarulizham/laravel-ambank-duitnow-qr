@@ -3,6 +3,7 @@
 namespace ZarulIzham\DuitNowQR;
 
 use Carbon\Carbon;
+use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
@@ -20,9 +21,9 @@ class DuitNowQR
             ->withHeaders([
                 'ClientID' => config('duitnowqr.client_id'),
             ])->post($url, [
-                'grant_type' => 'client_credentials',
-                'scope' => 'resource.READ,resource.WRITE',
-            ]);
+                    'grant_type' => 'client_credentials',
+                    'scope' => 'resource.READ,resource.WRITE',
+                ]);
 
         if (isset($response->object()->ResponseCode)) {
             throw new \Exception($response->object()->ResponseMessage, 400);
@@ -127,6 +128,14 @@ class DuitNowQR
             'Accept' => 'application/json',
             'Channel-APIKey' => config('duitnowqr.api_key'),
         ];
+
+        if (! $transactionDate instanceof DateTime) {
+            try {
+                $transactionDate = Carbon::createFromFormat('Y-m-d', $transactionDate);
+            } catch (\Throwable $th) {
+                throw new Exception('Failed to read transaction date. Please use format Y-m-d (Eg: 2024-12-31)');
+            }
+        }
 
         $body = [
             'QRString' => $qrString,

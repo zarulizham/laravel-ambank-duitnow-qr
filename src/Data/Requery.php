@@ -2,6 +2,8 @@
 
 namespace ZarulIzham\DuitNowQR\Data;
 
+use Carbon\Carbon;
+use DateTime;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 
@@ -44,5 +46,9 @@ class Requery extends Data
 
         #[MapInputName('SourceofFund')]
         public string $source_of_fund,
-    ) {}
+
+        public ?DateTime $paid_at,
+    ) {
+        $this->paid_at = Carbon::createFromFormat('d/m/Y H:i:s', $payment_date.' '.$payment_time);
+    }
 }
