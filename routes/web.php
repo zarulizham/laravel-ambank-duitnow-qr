@@ -22,6 +22,7 @@ Route::prefix($path)
             ->group(function () {
                 Route::get('/transactions', [DashboardController::class, 'transactions'])->name('transactions.index');
                 Route::get('/transactions/{transaction}', [DashboardController::class, 'showTransaction'])->name('transactions.show');
+                Route::post('/transactions/{transaction}/mock-payment', [DashboardController::class, 'mockPayment'])->name('transactions.mock-payment');
                 Route::get('/payments', [DashboardController::class, 'payments'])->name('payments.index');
             });
     });

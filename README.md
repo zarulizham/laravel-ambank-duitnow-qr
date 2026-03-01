@@ -38,6 +38,12 @@ Optionally, you can publish the views using
 php artisan vendor:publish --tag="laravel-duitnow-qr-views"
 ```
 
+You can also publish the callback controller stub to your app:
+
+```bash
+php artisan vendor:publish --tag="laravel-duitnow-qr-controllers"
+```
+
 ## Usage
 
 ```php

@@ -32,5 +32,9 @@ class DuitNowQRServiceProvider extends PackageServiceProvider
             'duitnowqr.dashboard.auth',
             EnsureDuitNowQRDashboardAuthorized::class
         );
+
+        $this->publishes([
+            __DIR__.'/Http/Controllers/Controller.php' => app_path('Http/Controllers/DuitNowQR/Controller.php'),
+        ], 'duitnow-qr-controllers');
     }
 }

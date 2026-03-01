@@ -81,6 +81,8 @@
     <script>
         window.DNQR_DASHBOARD = {
             apiBase: '{{ route('duitnowqr.dashboard.index') }}'.replace(/\/$/, '') + '/api',
+            isProduction: {{ app()->environment('production') ? 'true' : 'false' }},
+            csrfToken: '{{ csrf_token() }}',
         };
     </script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>

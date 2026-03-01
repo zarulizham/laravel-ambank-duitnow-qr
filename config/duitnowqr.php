@@ -18,4 +18,5 @@ return [
         'path' => env('DUITNOW_QR_DASHBOARD_PATH', 'duitnow-qr/dashboard'),
         'middleware' => ['web'],
     ],
+    'callback_url' => env('DUITNOW_QR_CALLBACK_URL'),
 ];

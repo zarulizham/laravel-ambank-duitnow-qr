@@ -4,6 +4,10 @@ export default {
             loading: true,
             model: null,
             error: '',
+            mockingPayment: false,
+            mockPaymentMessage: '',
+            mockPaymentError: '',
+            isProduction: Boolean(window.DNQR_DASHBOARD?.isProduction),
         };
     },
     async mounted() {
@@ -23,6 +27,30 @@ export default {
                 this.loading = false;
             }
         },
+        async mockPayment() {
+            if (!this.model || this.mockingPayment) {
+                return;
+            }
+
+            this.mockingPayment = true;
+            this.mockPaymentMessage = '';
+            this.mockPaymentError = '';
+
+            console.log(`${window.DNQR_DASHBOARD.apiBase}/transactions/${this.model.id}/mock-payment`);
+            try {
+                const response = await window.axios.post(
+                    `${window.DNQR_DASHBOARD.apiBase}/transactions/${this.model.id}/mock-payment`
+                );
+
+                this.mockPaymentMessage = response.data?.message || 'Mock payment sent successfully.';
+
+                await this.load();
+            } catch (error) {
+                this.mockPaymentError = error?.response?.data?.message || 'Failed to send mock payment.';
+            } finally {
+                this.mockingPayment = false;
+            }
+        },
     },
     template: `
         <div>
@@ -30,6 +58,9 @@ export default {
                 <h5 class="mb-0">Transaction Details</h5>
                 <router-link to="/transactions" class="btn btn-sm btn-outline-secondary">Back</router-link>
             </div>
+
+            <div v-if="mockPaymentMessage" class="alert alert-success">{{ mockPaymentMessage }}</div>
+            <div v-if="mockPaymentError" class="alert alert-danger">{{ mockPaymentError }}</div>
 
             <div v-if="loading" class="text-muted">Loading details...</div>
             <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
@@ -48,7 +79,18 @@ export default {
                     </div>
                 </div>
 
-                <h5 class="mt-4">Payments for this Transaction</h5>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mt-4">Payments for this Transaction</h5>
+                    <button
+                        class="btn btn-sm btn-primary"
+                        @click="mockPayment"
+                        :disabled="mockingPayment || isProduction"
+                        v-if="!isProduction"
+                    >
+                        {{ mockingPayment ? 'Sending Mock Payment...' : 'Send Mock Payment' }}
+                    </button>
+                    
+                </div>
                 <div class="card border-0 shadow-sm">
                     <div class="card-body table-responsive px-0">
                         <table class="table table-sm table-striped align-middle mb-0">

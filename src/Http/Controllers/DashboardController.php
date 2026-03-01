@@ -4,6 +4,7 @@ namespace ZarulIzham\DuitNowQR\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 use ZarulIzham\DuitNowQR\Models\DuitNowQRPayment;
@@ -106,5 +107,44 @@ class DashboardController
                 'to' => $payments->lastItem(),
             ],
         ]);
+    }
+
+    public function mockPayment(DuitNowQRTransaction $transaction): JsonResponse
+    {
+        \Log::debug($transaction->toArray());
+        abort_if(app()->environment('production'), 403, 'Mock payment is disabled in production.');
+
+        abort_unless(filled(config('duitnowqr.callback_url')), 422, 'Config duitnowqr.callback_url is not configured.');
+
+        $callbackUrl = config('app.url').'/'.config('duitnowqr.callback_url');
+
+        $now = now();
+
+        $payload = [
+            'EndID' => Str::random(12),
+            'BizID' => Str::random(15),
+            'QRString' => (string) ($transaction->qr_string ?? 'xxx'),
+            'TransactionStatus' => 'ACSP',
+            'Reason' => null,
+            'SenderName' => 'Zarul Izham',
+            'TrxAmount' => $transaction->amount,
+            'TrxCurrency' => 'MYR',
+            'AccNo' => '***4196',
+            'PaymentDt' => $now->format('d/m/Y'),
+            'PaymentHrs' => $now->format('H:i:s'),
+            'SourceofFund' => 'CASA',
+        ];
+
+        $response = Http::asJson()->post($callbackUrl, $payload);
+
+        return response()->json([
+            'message' => 'Mock payment payload sent.',
+            'callback_url' => $callbackUrl,
+            'payload' => $payload,
+            'callback_response' => [
+                'status' => $response->status(),
+                'body' => $response->json() ?? $response->body(),
+            ],
+        ], $response->successful() ? 200 : 502);
     }
 }

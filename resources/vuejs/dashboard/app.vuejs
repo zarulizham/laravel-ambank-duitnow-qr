@@ -20,6 +20,8 @@ const router = createRouter({
 
 const app = createApp(AppShell);
 
+window.axios.defaults.headers.common['X-CSRF-TOKEN'] = window.DNQR_DASHBOARD.csrfToken;
+
 app.config.globalProperties.$formatDateTime = (value) => {
     if (!value) {
         return '-';
