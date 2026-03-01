@@ -1,0 +1,47 @@
+import AppShell from './AppShell.vuejs';
+import TransactionsPage from './pages/TransactionsPage.vuejs';
+import TransactionDetailsPage from './pages/TransactionDetailsPage.vuejs';
+import PaymentsPage from './pages/PaymentsPage.vuejs';
+
+const { createApp } = window.Vue;
+const { createRouter, createWebHashHistory } = window.VueRouter;
+
+const routes = [
+    { path: '/', redirect: '/transactions' },
+    { path: '/transactions', component: TransactionsPage },
+    { path: '/transactions/:id', component: TransactionDetailsPage },
+    { path: '/payments', component: PaymentsPage },
+];
+
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes,
+});
+
+const app = createApp(AppShell);
+
+app.config.globalProperties.$formatDateTime = (value) => {
+    if (!value) {
+        return '-';
+    }
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    const pad = (number) => String(number).padStart(2, '0');
+
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
+app.use(router);
+app.mount('#app');

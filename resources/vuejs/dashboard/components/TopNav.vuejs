@@ -1,0 +1,58 @@
+export default {
+    data() {
+        return {
+            isDarkMode: false,
+        };
+    },
+    mounted() {
+        const savedTheme = localStorage.getItem('dnqr-dashboard-theme');
+        const preferredDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const activeTheme = savedTheme || (preferredDark ? 'dark' : 'light');
+
+        this.setTheme(activeTheme);
+    },
+    methods: {
+        toggleDarkMode() {
+            this.setTheme(this.isDarkMode ? 'light' : 'dark');
+        },
+        setTheme(theme) {
+            const normalizedTheme = theme === 'dark' ? 'dark' : 'light';
+
+            this.isDarkMode = normalizedTheme === 'dark';
+            document.documentElement.setAttribute('data-bs-theme', normalizedTheme);
+            localStorage.setItem('dnqr-dashboard-theme', normalizedTheme);
+        },
+    },
+    template: `
+        <nav class="navbar navbar-expand-lg border-bottom mb-4">
+            <div class="container">
+                <a class="navbar-brand" href="#"><img height="40" src="https://upload.wikimedia.org/wikipedia/commons/2/22/DuitNow_QR_Logo.png"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#dnqr-navbar">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="dnqr-navbar">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <router-link class="nav-link" :class="{ active: $route.path.startsWith('/transactions') }" to="/transactions">Transactions</router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link class="nav-link" :class="{ active: $route.path.startsWith('/payments') }" to="/payments">Payments</router-link>
+                        </li>
+                    </ul>
+                    <div class="ms-lg-auto d-flex align-items-center mt-2 mt-lg-0">
+                        <div class="form-check form-switch mb-0 text-nowrap">
+                            <input
+                                id="dnqr-darkmode-toggle"
+                                class="form-check-input"
+                                type="checkbox"
+                                :checked="isDarkMode"
+                                @change="toggleDarkMode"
+                            >
+                            <label class="form-check-label" for="dnqr-darkmode-toggle">Dark mode</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    `,
+};

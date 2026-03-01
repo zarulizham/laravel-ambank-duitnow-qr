@@ -1,0 +1,15 @@
+import TopNav from './components/TopNav.vuejs';
+
+export default {
+    components: {
+        TopNav,
+    },
+    template: `
+        <div>
+            <TopNav />
+            <main class="container pb-4">
+                <router-view />
+            </main>
+        </div>
+    `,
+};

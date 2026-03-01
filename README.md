@@ -44,6 +44,41 @@ php artisan vendor:publish --tag="laravel-duitnow-qr-views"
 $duitNowQR = new ZarulIzham\DuitNowQR();
 ```
 
+### Dashboard SPA (Transactions & Payments)
+
+This package now provides a gated dashboard with Vue.js components and Bootstrap 5.3.
+
+- Transactions page: list all transactions and open a transaction details page (with related payments).
+- Payments page: list all payments with optional filters by `biz_id` or `end_id`.
+
+Default URL:
+
+```text
+/duitnow-qr/dashboard
+```
+
+Set your access gate (for example in `AppServiceProvider::boot`):
+
+```php
+use DuitNowQR;
+
+DuitNowQR::auth(function ($request) {
+	return $request->user()
+		&& $request->user()->role('Programmer');
+});
+```
+
+> Dashboard API endpoints are protected (authenticated users only). If `DuitNowQR::auth(...)` is configured, it is additionally enforced for API access.
+
+Dashboard route settings are configurable in `config/duitnowqr.php`:
+
+```php
+'dashboard' => [
+	'path' => env('DUITNOW_QR_DASHBOARD_PATH', 'duitnow-qr/dashboard'),
+	'middleware' => ['web'],
+],
+```
+
 
 ## Security Vulnerabilities
 

@@ -1,0 +1,86 @@
+export default {
+    data() {
+        return {
+            loading: true,
+            model: null,
+            error: '',
+        };
+    },
+    async mounted() {
+        await this.load();
+    },
+    methods: {
+        async load() {
+            this.loading = true;
+            this.error = '';
+
+            try {
+                const response = await window.axios.get(`${window.DNQR_DASHBOARD.apiBase}/transactions/${this.$route.params.id}`);
+                this.model = response.data?.data || null;
+            } catch (error) {
+                this.error = 'Failed to load transaction details.';
+            } finally {
+                this.loading = false;
+            }
+        },
+    },
+    template: `
+        <div>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Transaction Details</h5>
+                <router-link to="/transactions" class="btn btn-sm btn-outline-secondary">Back</router-link>
+            </div>
+
+            <div v-if="loading" class="text-muted">Loading details...</div>
+            <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
+            <div v-else-if="model">
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-4"><strong>ID:</strong> {{ model.id }}</div>
+                            <div class="col-md-4"><strong>Reference Type:</strong> {{ model.reference_type || '-' }}</div>
+                            <div class="col-md-4"><strong>Source Ref:</strong> {{ model.source_reference_number || '-' }}</div>
+                            <div class="col-md-4"><strong>Status:</strong> {{ model.transaction_status || '-' }}</div>
+                            <div class="col-md-4"><strong>Amount:</strong> {{ model.amount ?? '-' }}</div>
+                            <div class="col-md-4"><strong>Reference ID:</strong> {{ model.reference_id || '-' }}</div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="mt-4">Payments for this Transaction</h5>
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body table-responsive px-0">
+                        <table class="table table-sm table-striped align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>End ID</th>
+                                    <th>Biz ID</th>
+                                    <th>Sender Name</th>
+                                    <th>Status</th>
+                                    <th>Paid At</th>
+                                    <th class="text-end">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="payment in model.payments || []" :key="payment.id">
+                                    <td>{{ payment.id }}</td>
+                                    <td>{{ payment.end_id || '-' }}</td>
+                                    <td>{{ payment.biz_id || '-' }}</td>
+                                    <td>{{ payment.sender_name || '-' }}</td>
+                                    <td>{{ payment.transaction_status || '-' }}</td>
+                                    <td>{{ $formatDateTime(payment.paid_at) }}</td>
+                                    <td class="text-end">{{ payment.amount ?? '-' }}</td>
+                                </tr>
+                                <tr v-if="(model.payments || []).length === 0">
+                                    <td colspan="7" class="text-center text-muted py-4">No payments found for this transaction.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `,
+};

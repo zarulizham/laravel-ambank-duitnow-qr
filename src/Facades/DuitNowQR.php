@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @see \ZarulIzham\DuitNowQR\DuitNowQR
+ *
+ * @method static void auth(callable $callback)
  */
 class DuitNowQR extends Facade
 {

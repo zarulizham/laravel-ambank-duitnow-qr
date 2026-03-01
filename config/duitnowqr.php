@@ -14,4 +14,8 @@ return [
     'api_secret' => env('DUITNOW_QR_API_SECRET'),
     'version' => env('DUITNOW_QR_VERSION', 1),
     'store_qr_code' => env('DUITNOW_QR_STORE_QR_CODE', true),
+    'dashboard' => [
+        'path' => env('DUITNOW_QR_DASHBOARD_PATH', 'duitnow-qr/dashboard'),
+        'middleware' => ['web'],
+    ],
 ];

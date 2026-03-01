@@ -5,6 +5,7 @@ namespace ZarulIzham\DuitNowQR;
 use Carbon\Carbon;
 use DateTime;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use ZarulIzham\DuitNowQR\Exceptions\BadRequest;
@@ -12,6 +13,27 @@ use ZarulIzham\DuitNowQR\Models\DuitNowQRTransaction;
 
 class DuitNowQR
 {
+    protected static $authCallback;
+
+    public function hasDashboardAuthCallback(): bool
+    {
+        return (bool) static::$authCallback;
+    }
+
+    public function auth(callable $callback): void
+    {
+        static::$authCallback = $callback;
+    }
+
+    public function authorizeDashboard(Request $request): bool
+    {
+        if (! static::$authCallback) {
+            return true;
+        }
+
+        return (bool) call_user_func(static::$authCallback, $request);
+    }
+
     public function authenticate()
     {
         $url = config('duitnowqr.url').'/api/oauth/v2.0/token';

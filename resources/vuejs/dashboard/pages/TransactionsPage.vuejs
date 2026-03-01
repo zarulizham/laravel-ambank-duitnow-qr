@@ -1,0 +1,109 @@
+export default {
+    data() {
+        return {
+            loading: true,
+            rows: [],
+            error: '',
+            pagination: {
+                currentPage: 1,
+                lastPage: 1,
+                perPage: 15,
+                total: 0,
+                from: null,
+                to: null,
+            },
+        };
+    },
+    async mounted() {
+        await this.load();
+    },
+    methods: {
+        async load(page = this.pagination.currentPage) {
+            this.loading = true;
+            this.error = '';
+
+            try {
+                const response = await window.axios.get(`${window.DNQR_DASHBOARD.apiBase}/transactions`, {
+                    params: {
+                        page,
+                        per_page: this.pagination.perPage,
+                    },
+                });
+                this.rows = response.data?.data || [];
+
+                const meta = response.data?.meta || {};
+                this.pagination.currentPage = meta.current_page || 1;
+                this.pagination.lastPage = meta.last_page || 1;
+                this.pagination.perPage = meta.per_page || this.pagination.perPage;
+                this.pagination.total = meta.total || 0;
+                this.pagination.from = meta.from || null;
+                this.pagination.to = meta.to || null;
+            } catch (error) {
+                this.error = 'Failed to load transactions.';
+            } finally {
+                this.loading = false;
+            }
+        },
+        previousPage() {
+            if (this.pagination.currentPage > 1) {
+                this.load(this.pagination.currentPage - 1);
+            }
+        },
+        nextPage() {
+            if (this.pagination.currentPage < this.pagination.lastPage) {
+                this.load(this.pagination.currentPage + 1);
+            }
+        },
+    },
+    template: `
+        <h1 class="h3">DNQR Transactions</h1>
+        <div class="card border-0 shadow-sm">
+            <div class="card-body px-0">
+                <div v-if="loading" class="text-muted">Loading transactions...</div>
+                <div v-else-if="error" class="alert alert-danger mb-0">{{ error }}</div>
+                <div v-else class="table-responsive">
+                    <table class="table table-sm table-striped align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Source Ref</th>
+                                <th>Status</th>
+                                <th class="text-end">Amount</th>
+                                <th>Created At</th>
+                                <th class="text-end">Payments</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="row in rows" :key="row.id">
+                                <td>{{ row.id }}</td>
+                                <td>{{ row.source_reference_number || '-' }}</td>
+                                <td>{{ row.transaction_status || '-' }}</td>
+                                <td class="text-end">{{ row.amount ?? '-' }}</td>
+                                <td>{{ $formatDateTime(row.created_at) }}</td>
+                                <td class="text-end">{{ row.payments_count ?? 0 }}</td>
+                                <td class="text-end">
+                                    <router-link :to="'/transactions/' + row.id" class="btn btn-sm btn-outline-primary">View</router-link>
+                                </td>
+                            </tr>
+                            <tr v-if="rows.length === 0">
+                                <td colspan="7" class="text-center text-muted py-4">No transactions found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                
+            </div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-4" v-if="rows.length > 0">
+            <small class="text-muted">
+                Showing {{ pagination.from }}-{{ pagination.to }} of {{ pagination.total }}
+            </small>
+            <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-secondary" :disabled="pagination.currentPage <= 1" @click="previousPage">Previous</button>
+                <button class="btn btn-outline-secondary" :disabled="pagination.currentPage >= pagination.lastPage" @click="nextPage">Next</button>
+            </div>
+        </div>
+    `,
+};
