@@ -28,7 +28,7 @@ class DuitNowQR
     public function authorizeDashboard(Request $request): bool
     {
         if (! static::$authCallback) {
-            return true;
+            return false;
         }
 
         return (bool) call_user_func(static::$authCallback, $request);

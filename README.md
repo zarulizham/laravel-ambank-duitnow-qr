@@ -1,6 +1,5 @@
 # AmBank Malaysia's National QR Payment repository for Laravel
 
-
 ## Installation
 
 You can install the package via composer:
@@ -74,7 +73,7 @@ DuitNowQR::auth(function ($request) {
 });
 ```
 
-> Dashboard API endpoints are protected (authenticated users only). If `DuitNowQR::auth(...)` is configured, it is additionally enforced for API access.
+> Dashboard and dashboard API access are denied by default. You must configure `DuitNowQR::auth(...)` and return `true` for authorized users. Dashboard API endpoints still require an authenticated user.
 
 Dashboard route settings are configurable in `config/duitnowqr.php`:
 
@@ -85,11 +84,9 @@ Dashboard route settings are configurable in `config/duitnowqr.php`:
 ],
 ```
 
-
 ## Security Vulnerabilities
 
 Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
 
 ## License
 

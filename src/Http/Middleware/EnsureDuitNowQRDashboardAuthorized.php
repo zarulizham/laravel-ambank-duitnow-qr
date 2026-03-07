@@ -12,7 +12,6 @@ class EnsureDuitNowQRDashboardAuthorized
     public function handle(Request $request, Closure $next, string $mode = 'dashboard'): Response
     {
         $duitNowQR = app(DuitNowQR::class);
-        $authCallbackConfigured = $duitNowQR->hasDashboardAuthCallback();
         $authorized = $duitNowQR->authorizeDashboard($request);
 
         if ($mode === 'api') {
@@ -20,9 +19,7 @@ class EnsureDuitNowQRDashboardAuthorized
                 abort(401);
             }
 
-            if ($authCallbackConfigured && ! $authorized) {
-                abort(403);
-            }
+            abort_unless($authorized, 403);
         } else {
             abort_unless($authorized, 403);
         }
