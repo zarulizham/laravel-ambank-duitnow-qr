@@ -101,7 +101,7 @@ class DuitNowQR
             ->withBody(json_encode($body), 'application/json')
             ->post($url);
 
-        if ($response->status() == 400) {
+        if ($response->status() != 200) {
             throw new BadRequest($response['ResponseMessage']);
         }
 
