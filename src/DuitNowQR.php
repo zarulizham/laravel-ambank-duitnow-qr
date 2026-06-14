@@ -39,6 +39,8 @@ class DuitNowQR
         $url = config('duitnowqr.url').'/api/oauth/v2.0/token';
 
         $response = Http::asForm()
+            ->timeout(10)
+            ->retry(3, 1000)
             ->withBasicAuth(config('duitnowqr.client_id'), config('duitnowqr.client_secret'))
             ->withHeaders([
                 'ClientID' => config('duitnowqr.client_id'),
@@ -48,7 +50,7 @@ class DuitNowQR
                 ]);
 
         if (isset($response->object()->ResponseCode)) {
-            throw new \Exception($response->object()->ResponseMessage, 400);
+            throw new Exception($response->object()->ResponseMessage, 400);
         }
 
         return $response->object()->access_token;
@@ -98,6 +100,8 @@ class DuitNowQR
         $response = Http::withHeaders($headers)->withOptions([
             'debug' => false,
         ])
+            ->timeout(10)
+            ->retry(3, 1000)
             ->withBody(json_encode($body), 'application/json')
             ->post($url);
 
