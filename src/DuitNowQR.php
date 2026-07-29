@@ -177,8 +177,11 @@ class DuitNowQR
 
         $bodyEscaped = str_replace('\\', '', json_encode($body));
 
-        $headers['Ambank-Signature'] = $this->signature('/api/MerchantQR/v1.0/GetQTNotification/' . $sourceReferenceNumber, $ambankTimestamp, $body);
-
+        if (config('duitnowqr.version') == 2) {
+            $headers['Ambank-Signature'] = $this->signature('/api/MerchantQR/v2.0/GetQRNotification/' . $sourceReferenceNumber, $ambankTimestamp, $body);
+        } else {
+            $headers['Ambank-Signature'] = $this->signature('/api/MerchantQR/v1.0/GetQTNotification/' . $sourceReferenceNumber, $ambankTimestamp, $body);
+        }
         $response = Http::withHeaders($headers)->withOptions([
             'debug' => false,
         ])
