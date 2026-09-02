@@ -44,7 +44,7 @@ class DashboardController
 
         $transactions = DuitNowQRTransaction::query()
             ->withCount('payments')
-            ->latest()
+            ->orderByDesc('id')
             ->paginate($perPage, [
                 'id',
                 'source_reference_number',
